@@ -1,0 +1,57 @@
+﻿@page "/"
+@using Demo.Data.Models;
+@using Demo.Services;
+@inject CustomerService customerService;
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+
+<EditForm Model="@customer" OnValidSubmit="HandleSubmitCreate">
+    <label for="NameInput">Name</label>
+    <InputText id="NameINput" @bind-Value="@customer.Name"></InputText> 
+    <label for="AgeInput">Age</label>
+    <InputNumber id="AgeINput" @bind-Value="@customer.Age"></InputNumber>
+    <button type="submit" class="btn-primary">Create</button>
+</EditForm>
+
+<EditForm Model="@customer" OnValidSubmit="HandleSubmitUpdate">
+    <label for="NameInput">Name</label>
+    <InputText id="NameINput" @bind-Value="@customer.Name"></InputText>
+    <label for="AgeInput">Age</label>
+    <InputNumber id="AgeINput" @bind-Value="@customer.Age"></InputNumber>
+    <button type="submit" class="btn-primary">Update</button>
+</EditForm>
+
+<EditForm Model="@customer" OnValidSubmit="HandleSubmitDelete">
+    <label for="NameInput">Name</label>
+    <InputText id="NameINput" @bind-Value="@customer.Name"></InputText>
+    <button type="submit" class="btn-primary">Delete</button>
+</EditForm>
+
+
+@code{
+    Customer customer = new();
+
+    public void HandleSubmitCreate(EditContext editContext)
+    {
+        var newCustomer = (Customer)editContext.Model;
+        newCustomer.CreatedDate = DateTime.Now;
+        customerService.AddCustomer(newCustomer);
+    }
+    public void HandleSubmitUpdate(EditContext editContext)
+    {
+        var newCustomer = (Customer)editContext.Model;
+        customerService.UpdateCustomerByName(newCustomer.Name, newCustomer.Age);
+    }
+    public void HandleSubmitDelete(EditContext editContext)
+    {
+        var newCustomer = (Customer)editContext.Model;
+        customerService.RemoveCustomerByName(newCustomer.Name);
+    }
+}
